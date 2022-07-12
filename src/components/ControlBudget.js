@@ -9,7 +9,7 @@ const ControlBudget = ({budget, spents}) => {
 
   useEffect( () => {
     //with this we sum al the ammounts from the spents
-    const spentTotal = spents.reduce( (total, spent) => Number(spent.qty) + total, 0);
+    const spentTotal = spents.reduce( (total, spent) => Number(spent.expenseAmmount) + total, 0);
     setSpent(spentTotal)
 
     setAvailable(budget - spentTotal);

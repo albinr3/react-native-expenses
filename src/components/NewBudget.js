@@ -5,9 +5,6 @@ import globalStyles from '../styles'
 
 const NewBudget = ({handleNewBudget, budget, setBudget}) => {
 
-  
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Write Your Budget</Text>
@@ -20,7 +17,7 @@ const NewBudget = ({handleNewBudget, budget, setBudget}) => {
         onChangeText={setBudget}
         />
       <Pressable style={styles.button}
-      onPress={() => handleNewBudget(budget)}>
+        onPress={() => handleNewBudget(budget)}>
         <Text style={styles.btnText}>Add Budget</Text>
       </Pressable>
     </View>

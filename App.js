@@ -14,15 +14,10 @@ import ExpenseForm from './src/components/ExpenseForm';
 import Header from './src/components/Header';
 import NewBudget from './src/components/NewBudget';
 
-
 const App = () => {
   const [isValidBudget, setIsValidBudget] = useState(false)
   const [budget, setBudget] = useState(0) 
-  const [spents, setSpents] = useState( [
-    {id: 1, qty: 100},
-    {id: 2, qty: 150},
-    {id: 3, qty: 180},
-  ])
+  const [spents, setSpents] = useState([])
   const [newExpenseModal, setNewExpenseModal] = useState(false)
 
   const handleNewBudget = (budget) => {
@@ -32,6 +27,19 @@ const App = () => {
     } else {
       Alert.alert("Error", "Budget can not be less than 0")
     }
+  }
+
+  //this function is used in the add a new expense form, to add a new expense.
+  const handleSpent = spent => {
+    if(Object.values(spent).includes("")) {
+      Alert.alert("Error", "There are empty fields")
+    } else {
+      //add the new expense to the state
+      spent.id=Date.now()
+      setSpents([...spents, spent]);
+      setNewExpenseModal(false);
+    }
+    
   }
 
   return (
@@ -49,7 +57,9 @@ const App = () => {
 
       {newExpenseModal && (
         <Modal animationType='slide' visible={newExpenseModal}>
-          <ExpenseForm/>
+          <ExpenseForm 
+          setNewExpenseModal={setNewExpenseModal}
+          handleSpent={handleSpent}/>
         </Modal>
       )}
       {isValidBudget && (
