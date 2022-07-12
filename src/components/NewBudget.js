@@ -1,9 +1,11 @@
 import { View, Text, Pressable, TextInput, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
+import globalStyles from '../styles'
 
-const NewBudget = ({handleNewBudget}) => {
 
-  const [budget, setBudget] = useState(0)  
+const NewBudget = ({handleNewBudget, budget, setBudget}) => {
+
+  
 
 
   return (
@@ -27,21 +29,7 @@ const NewBudget = ({handleNewBudget}) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "white",
-        marginHorizontal: 10,
-        borderRadius: 10,
-        paddingVertical: 40,
-        paddingHorizontal: 20,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-
-        elevation: 5,
-        transform: [{translateY: 50}]
+      ...globalStyles.container
     },
     label: {
         textAlign: "center",

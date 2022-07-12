@@ -3,16 +3,27 @@ import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
+  Modal,
   View,
-  Alert
+  Alert,
+  Pressable,
+  Image
 } from 'react-native';
-import ControlBudget from './src/img/components/ControlBudget';
-import Header from './src/img/components/Header';
-import NewBudget from './src/img/components/NewBudget';
+import ControlBudget from './src/components/ControlBudget';
+import ExpenseForm from './src/components/ExpenseForm';
+import Header from './src/components/Header';
+import NewBudget from './src/components/NewBudget';
+
 
 const App = () => {
-  const [isValidBudget, setIsValidBudget] = useState(true)
+  const [isValidBudget, setIsValidBudget] = useState(false)
+  const [budget, setBudget] = useState(0) 
+  const [spents, setSpents] = useState( [
+    {id: 1, qty: 100},
+    {id: 2, qty: 150},
+    {id: 3, qty: 180},
+  ])
+  const [newExpenseModal, setNewExpenseModal] = useState(false)
 
   const handleNewBudget = (budget) => {
     if(Number(budget) > 0) {
@@ -28,10 +39,26 @@ const App = () => {
       <View style={styles.header}>
         <Header/>
         {isValidBudget ? 
-        <ControlBudget/> :
-        <NewBudget handleNewBudget={handleNewBudget}/> }
+        <ControlBudget budget={budget} spents={spents}/> :
+        <NewBudget
+         handleNewBudget={handleNewBudget}
+         setBudget={setBudget}
+         budget={budget}/> }
         
       </View>
+
+      {newExpenseModal && (
+        <Modal animationType='slide' visible={newExpenseModal}>
+          <ExpenseForm/>
+        </Modal>
+      )}
+      {isValidBudget && (
+        <Pressable onPress={ ()=> setNewExpenseModal(true)}>
+          <Image style={styles.image}
+            source={require("./src/img/nuevo-gasto.png")}
+          />
+        </Pressable>
+      )}
     </View>
   );
 };
@@ -44,6 +71,13 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor:"#3B82F6",
   },
+  image: {
+    width: 60,
+    height: 60,
+    position: "absolute",
+    top: 90,
+    right: 20
+  }
 });
 
 export default App;
