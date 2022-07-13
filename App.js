@@ -20,6 +20,7 @@ const App = () => {
   const [budget, setBudget] = useState(0) 
   const [spents, setSpents] = useState([])
   const [newExpenseModal, setNewExpenseModal] = useState(false)
+  const [spentToEdit, setSpentToEdit] = useState({})
 
   const handleNewBudget = (budget) => {
     if(Number(budget) > 0) {
@@ -32,16 +33,45 @@ const App = () => {
 
   //this function is used in the add a new expense form, to add a new expense.
   const handleSpent = spent => {
-    if(Object.values(spent).includes("")) {
+    if([spent.expenseName, spent.expenseAmmount, spent.ExpenseCategory].includes("")) {
       Alert.alert("Error", "There are empty fields")
     } else {
-      //add the new expense to the state
-      spent.id=Date.now()
-      setSpents([...spents, spent]);
+
+      if(spent.id) {
+        const updatedSpents = spents.map( spentState => 
+          spentState.id === spent.id ? spent : spentState
+        ); //check for the expense with id we are tryng to edit, and create a new object with the edited spent
+        setSpents(updatedSpents)
+      } else {
+        //add the new expense to the state
+        spent.id= Date.now()
+        spent.date= spent.id;
+        setSpents([...spents, spent]);
+      }
+      
       setNewExpenseModal(false);
     }
     
   }
+
+  //this function is used to delete an spent
+  const handleDelete = spentId => {
+    Alert.alert("Do you want to delete this Expense?", "This action can not be undone", [
+      {
+        text: "No", style: "cancel"
+      },
+      {
+        text: "Yes, delete it", onPress: ()=>{
+          const updatedSpents = spents.filter( spentState => spentState.id !== spentId);
+          setSpents(updatedSpents);
+          setNewExpenseModal(false);
+          setSpentToEdit({})
+        }
+      }
+    ])
+  }
+
+
 
   return (
     <View style={styles.container}>
@@ -61,20 +91,26 @@ const App = () => {
         <Modal animationType='slide' visible={newExpenseModal}>
           <ExpenseForm 
           setNewExpenseModal={setNewExpenseModal}
-          handleSpent={handleSpent}/>
+          handleSpent={handleSpent}
+          setSpentToEdit={setSpentToEdit}
+          spentToEdit={spentToEdit}
+          handleDelete={handleDelete}
+          />
         </Modal>
       )}
 
       {isValidBudget && (
         <SpentsList
         spents={spents}
+        setNewExpenseModal={setNewExpenseModal}
+        setSpentToEdit={setSpentToEdit}
         />
       )}
     </ScrollView>
     
       {isValidBudget && (
-        <Pressable onPress={ ()=> setNewExpenseModal(true)}>
-          <Image style={styles.image}
+        <Pressable style={styles.btnAdd} onPress={ ()=> setNewExpenseModal(true)}>
+          <Image style={styles.addImage}
             source={require("./src/img/nuevo-gasto.png")}
           />
         </Pressable>
@@ -94,9 +130,12 @@ const styles = StyleSheet.create({
     backgroundColor:"#3B82F6",
     minHeight: 400
   },
-  image: {
+  addImage: {
     width: 60,
     height: 60,
+    
+  },
+  btnAdd: {
     position: "absolute",
     bottom: 10,
     right: 20

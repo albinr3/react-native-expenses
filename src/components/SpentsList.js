@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, FlatList } from 'react-native'
 import React from 'react'
 import Spent from './Spent'
 
-const SpentsList = ({spents}) => {
+const SpentsList = ({spents, setNewExpenseModal, setSpentToEdit}) => {
   return (
     <View style={s.container}>
       <Text style={s.title}>Expense list</Text>
@@ -11,7 +11,11 @@ const SpentsList = ({spents}) => {
         <Text style={s.noSpent}>There are no expenses</Text>
       ) : 
       (spents.map( spent => 
-        <Spent key={spent.id} spent={spent}/>
+        <Spent 
+         key={spent.id}
+         spent={spent} 
+         setNewExpenseModal={setNewExpenseModal}
+         setSpentToEdit={setSpentToEdit}/>
       ))}
     </View>
   )

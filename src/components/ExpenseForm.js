@@ -10,13 +10,29 @@ import React, { useState, useEffect } from 'react';
 import ModalSelector from 'react-native-modal-selector';
 import globalStyles from '../styles';
 
-const ExpenseForm = ({setNewExpenseModal, handleSpent}) => {
+const ExpenseForm = ({setNewExpenseModal,handleDelete, handleSpent, setSpentToEdit,spentToEdit}) => {
 
   const [expenseName, setExpenseName] = useState("");
   const [expenseAmmount, setExpenseAmmount] = useState("");
   const [expenseCategory, setExpenseCategory] = useState("");
   const [initialPicker, setInitialPicker] = useState(0);
+  const [id, setId] = useState("");
+  const [date, setDate] = useState("");
 
+  useEffect(() => {
+    if(spentToEdit?.expenseName) {
+      setExpenseAmmount(spentToEdit.expenseAmmount)
+      setExpenseCategory(spentToEdit.expenseCategory)
+      setExpenseName(spentToEdit.expenseName)
+      setId(spentToEdit.id)
+      setDate(spentToEdit.date)
+
+      categoryToKey = pickerData.filter(item => item.value === spentToEdit.expenseCategory) //this is for the picker
+      setInitialPicker(categoryToKey[0].key) 
+    }
+  }, [spentToEdit])
+
+  let categoryToKey;
   const pickerData = [
     {key: 0, label: '-- SELECT --', value: 'select'},
     {key: 1, label: 'Save', value: 'save'},
@@ -28,16 +44,29 @@ const ExpenseForm = ({setNewExpenseModal, handleSpent}) => {
     {key: 7, label: 'Subscriptions', value: 'subscriptions'},
   ];
 
+  
+
   return (
     <SafeAreaView style={s.container}>
-      <View>
-        <Pressable onPress={()=>setNewExpenseModal(false)} style={s.btnCancel}>
+      <View style={s.btnContainer}>
+        <Pressable onPress={()=> {
+          setNewExpenseModal(false)
+          setSpentToEdit({})
+        }} 
+        style={[s.btnCancel, s.btn]}>
           <Text style={s.textBtnCancel}>Cancel</Text>
         </Pressable>
+
+        {!!id && (
+          <Pressable onPress={()=>handleDelete(id)} 
+          style={[s.btnEdit, s.btn]}>
+            <Text style={s.textBtnCancel}>Delete</Text>
+          </Pressable>
+        )}
       </View>
 
       <View style={s.form}>
-        <Text style={s.title}>New Expense</Text>
+        <Text style={s.title}>{spentToEdit?.expenseName ? "Editing Expense":"New Expense"}</Text>
 
         <View style={s.field}>
           <Text style={s.label}>Expense Name</Text>
@@ -64,18 +93,16 @@ const ExpenseForm = ({setNewExpenseModal, handleSpent}) => {
           <ModalSelector
             style={s.input}
             onChange={(option) => {
-                const keySelected = pickerData.filter(item => item.value === option.value)
                 setExpenseCategory(option.value)
-                setInitialPicker(keySelected[0].key)
+                setInitialPicker(option.key)
               }}
-            initValue="-- Select --"
             data={pickerData}
             selectedKey={initialPicker}
           />
         </View>
 
-        <Pressable onPress={() => handleSpent({expenseName, expenseAmmount, expenseCategory})} style={s.submitBtn}>
-          <Text style={s.textBtn}>Add Expense</Text>
+        <Pressable onPress={() => handleSpent({expenseName, expenseAmmount, expenseCategory, id, date})} style={s.submitBtn}>
+          <Text style={s.textBtn}> {spentToEdit?.expenseName ? "Edit Expense":"Add Expense"}</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -89,11 +116,23 @@ const s = StyleSheet.create({
     backgroundColor: '#1e40af',
     flex: 1,
   },
-  btnCancel: {
-    backgroundColor: "#db2777",
+  btnContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    
+  },
+  btn: {
     padding: 10,
     marginTop: 30,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    width: "40%",
+    flex: 1
+  },
+  btnEdit: {
+    backgroundColor: "red",
+  },
+  btnCancel: {
+    backgroundColor: "#db2777",
   },
   textBtnCancel: {
     color: "white",
@@ -137,4 +176,5 @@ const s = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: 'bold',
   },
+  
 });
