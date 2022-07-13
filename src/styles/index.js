@@ -14,7 +14,7 @@ const globalStyles = {
         shadowRadius: 3.84,
 
         elevation: 5,
-        transform: [{translateY: 50}],
+        transform: [{translateY: 30}],
     }
 }
 

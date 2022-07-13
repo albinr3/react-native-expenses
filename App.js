@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import {
-  SafeAreaView,
+  ScrollView,
   StyleSheet,
   Modal,
   View,
@@ -13,6 +13,7 @@ import ControlBudget from './src/components/ControlBudget';
 import ExpenseForm from './src/components/ExpenseForm';
 import Header from './src/components/Header';
 import NewBudget from './src/components/NewBudget';
+import SpentsList from './src/components/SpentsList';
 
 const App = () => {
   const [isValidBudget, setIsValidBudget] = useState(false)
@@ -43,7 +44,8 @@ const App = () => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
+      <ScrollView>
       <View style={styles.header}>
         <Header/>
         {isValidBudget ? 
@@ -62,12 +64,21 @@ const App = () => {
           handleSpent={handleSpent}/>
         </Modal>
       )}
+
+      {isValidBudget && (
+        <SpentsList
+        spents={spents}
+        />
+      )}
+    </ScrollView>
+    
       {isValidBudget && (
         <Pressable onPress={ ()=> setNewExpenseModal(true)}>
           <Image style={styles.image}
             source={require("./src/img/nuevo-gasto.png")}
           />
         </Pressable>
+
       )}
     </View>
   );
@@ -76,16 +87,18 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#F5F5F5",
-    flex: 1
+    flex: 1,
+    zIndex: 20
   },
   header: {
     backgroundColor:"#3B82F6",
+    minHeight: 400
   },
   image: {
     width: 60,
     height: 60,
     position: "absolute",
-    top: 90,
+    bottom: 10,
     right: 20
   }
 });

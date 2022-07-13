@@ -26,7 +26,7 @@ const NewBudget = ({handleNewBudget, budget, setBudget}) => {
 
 const styles = StyleSheet.create({
     container: {
-      ...globalStyles.container
+      ...globalStyles.container,
     },
     label: {
         textAlign: "center",

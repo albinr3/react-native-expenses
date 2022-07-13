@@ -43,7 +43,7 @@ const ControlBudget = ({budget, spents}) => {
 
 const s = StyleSheet.create({
   container: {
-    ...globalStyles.container
+    ...globalStyles.container,
   },
   centerImage: {
     alignItems: "center"
