@@ -28,6 +28,7 @@ const App = () => {
   const [filterSpents, setfilterSpents] = useState([])
   const [showFilter, setShowFilter] = useState(false);
 
+  //use effect to get the saved budget on the storage
   useEffect(()=>{
     const getAsyncBudget = async ()=>{
       try {
@@ -46,7 +47,7 @@ const App = () => {
     getAsyncBudget()
   }, [])
   
-
+  //use effect to set the budget to the storage
   useEffect(() => {
     if(isValidBudget){
     const saveAsyncBudget = async ()=>{
@@ -62,10 +63,36 @@ const App = () => {
   }
   }, [isValidBudget])
 
+  //use effect to get the saved spents on the storage
   useEffect(() => {
-    return () => {
-      
+    async function getAsyncSpents() {
+      try {
+        const spentsStorage = await AsyncStorage.getItem("apv_spents");
+        
+        setSpents(spentsStorage ? JSON.parse(spentsStorage) : []) 
+      } catch (error) {
+        console.log(error)
+      }
     };
+
+    getAsyncSpents()
+  }, [])
+
+  //use effect to set the spents to the storage
+  useEffect(() => {
+    
+    const saveAsyncSpents = async () => {
+        try {
+          await AsyncStorage.setItem("apv_spents", JSON.stringify(spents))
+          const spentsStorage = await AsyncStorage.getItem("apv_spents")
+          console.log(spentsStorage)
+        } catch (error) {
+          console.log(error)
+        }
+     
+    };
+
+    saveAsyncSpents()
   }, [spents])
 
   const handleNewBudget = (budget) => {
@@ -117,6 +144,25 @@ const App = () => {
     ])
   }
 
+  const resetApp = () => {
+
+    Alert.alert("Do you want to reset the app?", "This will delete your budget and all spents", 
+    [
+      {text: "No", style: "cancel"},
+      {text: "Yes, Reset the app", onPress: async ()=>{
+        try {
+          await AsyncStorage.clear()
+          setBudget(0)
+          setSpents([])
+          setIsValidBudget(false)
+        } catch (error) {
+          console.log(error)
+        }
+        
+      }}
+    ]);
+    
+  }
 
 
   return (
@@ -125,7 +171,7 @@ const App = () => {
       <View style={styles.header}>
         <Header/>
         {isValidBudget ? 
-        <ControlBudget budget={budget} spents={spents}/> :
+        <ControlBudget resetApp={resetApp} budget={budget} spents={spents}/> :
         <NewBudget
          handleNewBudget={handleNewBudget}
          setBudget={setBudget}

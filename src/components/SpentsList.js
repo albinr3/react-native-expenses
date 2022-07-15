@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 import React from 'react'
 import Spent from './Spent'
 
@@ -27,7 +27,7 @@ const SpentsList = ({spents, setNewExpenseModal, setSpentToEdit, filterSpents, f
          setSpentToEdit={setSpentToEdit}/>
       ))}
 
-      {spents.length === 0 || filterSpents.length === 0 && (
+      {(spents.length === 0 || (filterSpents.length === 0 && filter !== "select")) && (
         <Text style={s.noSpent}>There are no expenses</Text>
       )}
     </View>
@@ -38,7 +38,7 @@ export default SpentsList
 
 const s = StyleSheet.create({
     container: {
-        marginTop: 30,
+        marginTop: 35,
         marginBottom: 100
     },
     title: {

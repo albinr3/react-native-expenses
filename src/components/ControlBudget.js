@@ -1,9 +1,9 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Pressable, StyleSheet} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import globalStyles from '../styles';
 import CircularProgress from 'react-native-circular-progress-indicator';
 
-const ControlBudget = ({budget, spents}) => {
+const ControlBudget = ({budget, spents, resetApp}) => {
 
   const [available, setAvailable] = useState(0);
   const [spent, setSpent] = useState(0)
@@ -46,6 +46,10 @@ const ControlBudget = ({budget, spents}) => {
         />
       </View>
 
+      <Pressable onLongPress={resetApp} style={s.btn}>
+        <Text style={s.textBtn}>Reset App</Text>
+      </Pressable>
+
       <View style={s.textContainer}>
         <Text style={s.value}>
           <Text style={s.label}>Budget: </Text>
@@ -71,14 +75,24 @@ const s = StyleSheet.create({
     ...globalStyles.container,
   },
   centerImage: {
-    alignItems: "center"
+    alignItems: "center",
+    marginBottom: 50
   },
-  image: {
-    width: 250,
-    height: 250
+  btn: {
+    backgroundColor: "#db2777",
+    padding: 10,
+    marginBottom: 40,
+    borderRadius: 5,
+    marginHorizontal: 50
+  },
+  textBtn: {
+    textAlign: "center",
+    color: "#FFF",
+    fontWeight: "bold",
+    textTransform: "uppercase"
   },
   textContainer: {
-    marginTop: 50
+    marginTop: 5
   },
   value: {
     fontSize: 24,
