@@ -18,6 +18,8 @@ import NewBudget from './src/components/NewBudget';
 import SpentsList from './src/components/SpentsList';
 
 
+
+
 const App = () => {
   const [isValidBudget, setIsValidBudget] = useState(false)
   const [budget, setBudget] = useState(0) 

@@ -293,6 +293,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    //compile project(':react-native-html-to-pdf')
 }
 
 if (isNewArchitectureEnabled()) {
