@@ -9,6 +9,8 @@ import {
 import React, { useState, useEffect } from 'react';
 import ModalSelector from 'react-native-modal-selector';
 import globalStyles from '../styles';
+import { categoryToKey } from '../helpers';
+import {Picker} from '@react-native-picker/picker';
 
 const ExpenseForm = ({setNewExpenseModal,handleDelete, handleSpent, setSpentToEdit,spentToEdit}) => {
 
@@ -26,22 +28,19 @@ const ExpenseForm = ({setNewExpenseModal,handleDelete, handleSpent, setSpentToEd
       setExpenseName(spentToEdit.expenseName)
       setId(spentToEdit.id)
       setDate(spentToEdit.date)
-
-      categoryToKey = pickerData.filter(item => item.value === spentToEdit.expenseCategory) //this is for the picker
-      setInitialPicker(categoryToKey[0].key) 
+      setInitialPicker(categoryToKey(spentToEdit.expenseCategory, pickerData)[0].key) 
     }
-  }, [spentToEdit])
+  }, [spentToEdit]);
 
-  let categoryToKey;
   const pickerData = [
     {key: 0, label: '-- SELECT --', value: 'select'},
-    {key: 1, label: 'Save', value: 'save'},
-    {key: 2, label: 'Food', value: 'food'},
-    {key: 3, label: 'Home', value: 'home'},
-    {key: 4, label: 'Various Expenses', value: 'various'},
-    {key: 5, label: 'Hobbies', value: 'hobbies'},
-    {key: 6, label: 'Health', value: 'health'},
-    {key: 7, label: 'Subscriptions', value: 'subscriptions'},
+    {key: 1, label: '💰 Saving', value: 'save'},
+    {key: 2, label: '🍕 Food', value: 'food'},
+    {key: 3, label: '🏠 Home', value: 'home'},
+    {key: 4, label: '💸 Various Expenses', value: 'various'},
+    {key: 5, label: '🧰 Hobbies', value: 'hobbies'},
+    {key: 6, label: '💊 Health', value: 'health'},
+    {key: 7, label: '💻 Subscriptions', value: 'subscriptions'},
   ];
 
   

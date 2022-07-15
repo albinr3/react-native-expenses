@@ -10,4 +10,7 @@ const formatDate = date => {
     return newDate.toLocaleDateString("es-ES", options)
 }
 
+export const categoryToKey = (category, data) => 
+data.filter(item => item.value === category); //this is for the picker
+
 export default formatDate

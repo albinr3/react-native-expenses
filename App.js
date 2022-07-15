@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   ScrollView,
@@ -11,9 +12,11 @@ import {
 } from 'react-native';
 import ControlBudget from './src/components/ControlBudget';
 import ExpenseForm from './src/components/ExpenseForm';
+import Filter from './src/components/Filter';
 import Header from './src/components/Header';
 import NewBudget from './src/components/NewBudget';
 import SpentsList from './src/components/SpentsList';
+
 
 const App = () => {
   const [isValidBudget, setIsValidBudget] = useState(false)
@@ -21,6 +24,49 @@ const App = () => {
   const [spents, setSpents] = useState([])
   const [newExpenseModal, setNewExpenseModal] = useState(false)
   const [spentToEdit, setSpentToEdit] = useState({})
+  const [filter, setFilter] = useState("select") 
+  const [filterSpents, setfilterSpents] = useState([])
+  const [showFilter, setShowFilter] = useState(false);
+
+  useEffect(()=>{
+    const getAsyncBudget = async ()=>{
+      try {
+        const budgetStorage = await AsyncStorage.getItem("apv_budget") ?? 0;
+
+        if(budgetStorage > 0){
+          setBudget(budgetStorage) 
+          setIsValidBudget(true)
+        }
+         
+      } catch (error) {
+        console.log(error)
+      }
+      
+    }
+    getAsyncBudget()
+  }, [])
+  
+
+  useEffect(() => {
+    if(isValidBudget){
+    const saveAsyncBudget = async ()=>{
+      try {
+        await AsyncStorage.setItem("apv_budget", budget)
+        console.log("almacenado")
+      } catch (error) {
+        console.log(error)
+      }
+      
+    }
+    saveAsyncBudget()
+  }
+  }, [isValidBudget])
+
+  useEffect(() => {
+    return () => {
+      
+    };
+  }, [spents])
 
   const handleNewBudget = (budget) => {
     if(Number(budget) > 0) {
@@ -100,11 +146,24 @@ const App = () => {
       )}
 
       {isValidBudget && (
-        <SpentsList
-        spents={spents}
-        setNewExpenseModal={setNewExpenseModal}
-        setSpentToEdit={setSpentToEdit}
-        />
+        <>
+          {showFilter && (
+            <Filter
+            setFilter={setFilter}
+            filter={filter}
+            spents={spents}
+            setfilterSpents={setfilterSpents}
+          />
+          )}
+          <SpentsList
+          spents={spents}
+          setNewExpenseModal={setNewExpenseModal}
+          setSpentToEdit={setSpentToEdit}
+          filterSpents={filterSpents}
+          filter={filter}
+          setShowFilter={setShowFilter}
+          />
+        </>
       )}
     </ScrollView>
     
